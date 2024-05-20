@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fixluck.hogwartartifactsonline.artifact.dto.ArtifactDTO;
 import com.fixluck.hogwartartifactsonline.system.StatusCode;
+import com.fixluck.hogwartartifactsonline.wizard.Wizard;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,7 @@ class ArtifactControllerTest {
     ObjectMapper objectMapper;
 
     List<Artifact> artifacts;
+
 
     @BeforeEach
     void setUp() {

@@ -73,6 +73,7 @@ class ArtifactServiceTest {
         a.setDescription("An invisibility cloak is used to make the wearer invisible.");
         a.setImageUrl("ImageUrl");
 
+
         Wizard w = new Wizard();
         w.setId(2);
         w.setName("Harry Potter");
