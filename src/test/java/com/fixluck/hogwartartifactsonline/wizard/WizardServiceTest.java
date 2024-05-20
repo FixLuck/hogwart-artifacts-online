@@ -34,6 +34,8 @@ class WizardServiceTest {
 
 
     List<Artifact> artifacts;
+    List<Wizard> wizards;
+
 
     @BeforeEach
     void setUp() {
@@ -53,6 +55,26 @@ class WizardServiceTest {
 
         this.artifacts.add(a1);
         this.artifacts.add(a2);
+
+        this.wizards = new ArrayList<>(); //tránh null array
+
+        Wizard w1 = new Wizard();
+        w1.setId(1);
+        w1.setName("Albus Dumbledore");
+
+        wizards.add(w1);
+
+        Wizard w2 = new Wizard();
+        w2.setId(2);
+        w2.setName("Harry Potter");
+
+        wizards.add(w2);
+
+        Wizard w3 = new Wizard();
+        w3.setId(3);
+        w3.setName("Neville Longbottom");
+
+        wizards.add(w3);
     }
 
     @AfterEach
@@ -99,5 +121,18 @@ class WizardServiceTest {
 
         verify(wizardRepository, times(1)).findById(1);
 
+    }
+
+    @Test
+    void testFindAll() {
+        //Given
+        given(this.wizardRepository.findAll()).willReturn(this.wizards);
+
+        //When
+        List<Wizard> actualWizards = this.wizardService.findAll();
+
+        //Then
+        assertThat(actualWizards.size()).isEqualTo(this.wizards.size());
+        verify(this.wizardRepository, times(1)).findAll(); //verify given
     }
 }

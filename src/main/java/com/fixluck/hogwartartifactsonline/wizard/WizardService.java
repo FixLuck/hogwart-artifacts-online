@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class WizardService {
@@ -16,8 +18,13 @@ public class WizardService {
     }
 
     public Wizard findById(Integer wizardId) {
-        Wizard wizard = this.wizardRepository.findById(wizardId)
+        return this.wizardRepository
+                .findById(wizardId)
                 .orElseThrow(() -> new WizardNotFoundException(wizardId));
-        return wizard;
+    }
+
+
+    public List<Wizard> findAll() {
+        return this.wizardRepository.findAll();
     }
 }
