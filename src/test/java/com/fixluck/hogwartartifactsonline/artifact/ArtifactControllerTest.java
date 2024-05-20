@@ -120,14 +120,15 @@ class ArtifactControllerTest {
         given(this.artifactService.findById("1250808601744904191")).willThrow(new ArtifactNotFoundException("1250808601744904191"));
 
         // When and then
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artifacts/1250808601744904191").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/artifacts/1250808601744904191")
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find artifact with Id 1250808601744904191 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
 
 
-        // Then
+
     }
 
     @Test

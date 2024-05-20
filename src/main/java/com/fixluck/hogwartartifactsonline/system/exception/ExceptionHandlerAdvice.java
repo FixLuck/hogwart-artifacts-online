@@ -3,6 +3,7 @@ package com.fixluck.hogwartartifactsonline.system.exception;
 import com.fixluck.hogwartartifactsonline.artifact.ArtifactNotFoundException;
 import com.fixluck.hogwartartifactsonline.system.Result;
 import com.fixluck.hogwartartifactsonline.system.StatusCode;
+import com.fixluck.hogwartartifactsonline.wizard.WizardNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -35,5 +36,11 @@ public class ExceptionHandlerAdvice {
             map.put(key, value);
         });
         return new Result(false, StatusCode.INVALID_ARGUMENT, "Provided arguments are invalid, see data for details", map);
+    }
+
+    @ExceptionHandler(WizardNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    Result handleWizardNotFoundException(WizardNotFoundException exception) {
+        return new Result(false, StatusCode.NOT_FOUND, exception.getMessage());
     }
 }
