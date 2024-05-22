@@ -214,11 +214,11 @@ class ArtifactServiceTest {
         given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(artifact));
         doNothing().when(artifactRepository).deleteById("1250808601744904192");
 
-        //Then
+        //When
         artifactService.delete("1250808601744904192");
         //vì phương thức delete là void nên ko cần xác định giá trị của biến
 
-        //When
+        //Then
         verify(artifactRepository, times(1)).deleteById("1250808601744904192");
 
     }
