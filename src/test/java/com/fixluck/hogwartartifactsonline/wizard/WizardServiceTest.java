@@ -19,8 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -135,4 +134,102 @@ class WizardServiceTest {
         assertThat(actualWizards.size()).isEqualTo(this.wizards.size());
         verify(this.wizardRepository, times(1)).findAll(); //verify given
     }
+
+    @Test
+    void testSave() {
+        //Given: create fake data
+        Wizard newWizard = new Wizard();
+        newWizard.setName("Hermione Granger");
+        newWizard.setId(4);
+
+        given(this.wizardRepository.save(newWizard)).willReturn(newWizard);
+        //When
+        Wizard saveWizard = this.wizardService.save(newWizard);
+
+        //Then
+        assertThat(saveWizard.getId()).isEqualTo(4);
+        assertThat(saveWizard.getName()).isEqualTo("Hermione Granger");
+        verify(this.wizardRepository, times(1)).save(newWizard);
+
+
+    }
+
+    @Test
+    void testUpdateSuccess() {
+        //Given: create a fake data the represents an existing wizard in db that we try to update
+        Wizard oldWizard = new Wizard();
+        oldWizard.setId(1);
+        oldWizard.setName("Albus Dumbledore");
+
+        Wizard updateWizard = new Wizard();
+        updateWizard.setId(1);
+        updateWizard.setName("Albus Dumbledore - update");
+
+        given(this.wizardRepository.findById(1)).willReturn(Optional.of(oldWizard));
+        given(this.wizardRepository.save(oldWizard)).willReturn(oldWizard);
+
+        //Then
+        Wizard update = this.wizardService.update(1, updateWizard);
+
+        //When
+        assertThat(updateWizard.getId()).isEqualTo(update.getId());
+        assertThat(updateWizard.getName()).isEqualTo(update.getName());
+        verify(this.wizardRepository, times(1)).findById(1);
+        verify(this.wizardRepository, times(1)).save(oldWizard);
+
+
+    }
+
+    @Test
+    void testUpdateIdNotFound() {
+        //Given
+        Wizard foundWizard = new Wizard();
+        foundWizard.setId(1);
+        foundWizard.setName("Albus Dumbledore");
+
+        given(this.wizardRepository.findById(1)).willReturn(Optional.empty());
+
+        //When
+        assertThrows(WizardNotFoundException.class, () -> {
+            this.wizardService.update(1, foundWizard);
+        });
+
+        //Then
+        verify(this.wizardRepository, times(1)).findById(1);
+
+    }
+
+    @Test
+    void testDeleteSuccess() {
+        //Given
+        Wizard oldWizard = new Wizard();
+        oldWizard.setId(1);
+        oldWizard.setName("Albus Dumbledore");
+        given(this.wizardRepository.findById(1)).willReturn(Optional.of(oldWizard));
+        doNothing().when(this.wizardRepository).deleteById(1);
+
+        //When
+        wizardService.delete(1);
+
+        //Then
+        verify(this.wizardRepository, times(1)).findById(1);
+        verify(this.wizardRepository, times(1)).deleteById(1);
+
+    }
+
+    @Test
+    void testDeleteWithIdNotFound() {
+        //Given
+        given(this.wizardRepository.findById(1)).willReturn(Optional.empty());
+
+        //When
+        assertThrows(WizardNotFoundException.class, () -> {
+            this.wizardService.delete(1);
+        });
+
+        //Then
+        verify(this.wizardRepository, times(1)).findById(1);
+        verify(this.wizardRepository, never()).deleteById(1);
+    }
+
 }

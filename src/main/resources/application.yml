@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: hogwart-artifacts-online
+
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;DatabaseName=userdb;encrypt=true;trustServerCertificate=true;
+    username: sa
+    password: sa123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+
+api:
+  endpoint:
+    base-url: /api/v1
