@@ -1,6 +1,8 @@
 package com.fixluck.hogwartartifactsonline.wizard;
 
 import com.fixluck.hogwartartifactsonline.artifact.Artifact;
+import com.fixluck.hogwartartifactsonline.artifact.ArtifactRepository;
+import com.fixluck.hogwartartifactsonline.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +30,13 @@ class WizardServiceTest {
     @Mock
     WizardRepository wizardRepository;
 
+    @Mock
+    ArtifactRepository artifactRepository;
+
     @InjectMocks
     WizardService wizardService;
+
+
 
 
     List<Artifact> artifacts;
@@ -230,6 +237,93 @@ class WizardServiceTest {
         //Then
         verify(this.wizardRepository, times(1)).findById(1);
         verify(this.wizardRepository, never()).deleteById(1);
+    }
+
+    @Test
+    void testAssignArtifactSuccess() {
+        //Given
+        Artifact a1 = new Artifact();
+        a1.setId("1250808601744904191");
+        a1.setName("Deluminator");
+        a1.setDescription("A Deluminator is a device invented by Albus Dumbledore that resembles a cigarette lighter. It is used to remove or absorb (as well as return) the light from any light source to provide cover to the user.");
+        a1.setImageUrl("ImageUrl");
+
+
+        Wizard oldWizard = new Wizard();
+        oldWizard.setId(1);
+        oldWizard.setName("Albus Dumbledore");
+        oldWizard.addArtifact(a1);
+
+        Wizard newWizard = new Wizard();
+        newWizard.setName("Hermione Granger");
+        newWizard.setId(4);
+
+
+        //tìm kiếm xem cả artifact và wizard có tồn tại ko ko, nếu có thì mới có thể
+        //gán artifact cho wizard, nếu ko thì throw Exception
+        given(this.artifactRepository.findById("1250808601744904191")).willReturn(Optional.of(a1));
+        given(this.wizardRepository.findById(4)).willReturn(Optional.of(newWizard));
+
+        //When
+        this.wizardService.assignArtifact(4, "1250808601744904191");
+
+        //Then
+        assertThat(a1.getOwner().getId()).isEqualTo(4);
+        assertThat(newWizard.getArtifacts().contains(a1));
+
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentWizardId() {
+        //Given
+        Artifact a1 = new Artifact();
+        a1.setId("1250808601744904191");
+        a1.setName("Deluminator");
+        a1.setDescription("A Deluminator is a device invented by Albus Dumbledore that resembles a cigarette lighter. It is used to remove or absorb (as well as return) the light from any light source to provide cover to the user.");
+        a1.setImageUrl("ImageUrl");
+
+
+        Wizard oldWizard = new Wizard();
+        oldWizard.setId(1);
+        oldWizard.setName("Albus Dumbledore");
+        oldWizard.addArtifact(a1);
+
+
+
+        //tìm kiếm xem cả artifact và wizard có tồn tại ko ko, nếu có thì mới có thể
+        //gán artifact cho wizard, nếu ko thì throw Exception
+        given(this.artifactRepository.findById("1250808601744904191")).willReturn(Optional.of(a1));
+        given(this.wizardRepository.findById(1)).willReturn(Optional.empty());
+
+        //When
+        Throwable throwable = assertThrows(ObjectNotFoundException.class, () -> {
+            this.wizardService.assignArtifact(1, "1250808601744904191");
+        });
+
+        //Then
+        assertThat(throwable)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find wizard with Id 1 :(");
+        assertThat(a1.getOwner().getId()).isEqualTo(1);
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentArtifactId() {
+        //Given
+
+        given(this.artifactRepository.findById("1250808601744904191")).willReturn(Optional.empty());
+
+
+        //When
+        Throwable throwable = assertThrows(ObjectNotFoundException.class, () -> {
+            this.wizardService.assignArtifact(1, "1250808601744904191");
+        });
+
+        //Then
+        assertThat(throwable)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find artifact with Id 1250808601744904191 :(");
+
     }
 
 }

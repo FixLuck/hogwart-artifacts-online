@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fixluck.hogwartartifactsonline.artifact.Artifact;
 import com.fixluck.hogwartartifactsonline.system.StatusCode;
+import com.fixluck.hogwartartifactsonline.system.exception.ObjectNotFoundException;
 import com.fixluck.hogwartartifactsonline.wizard.dto.WizardDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -218,6 +219,45 @@ class WizardControllerTest {
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find wizard with Id 1 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactSuccess() throws Exception {
+        //Given
+        doNothing().when(this.wizardService).assignArtifact(2, "1250808601744904192");
+
+        //When and then
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/wizards/2/artifacts/1250808601744904192").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Artifact assignment success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentWizardId() throws Exception {
+        //Given
+       doThrow(new ObjectNotFoundException("wizard", 5)).when(this.wizardService).assignArtifact(5, "1250808601744904192");
+
+        //When and then
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/wizards/5/artifacts/1250808601744904192").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find wizard with Id 5 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentArtifactId() throws Exception {
+        //Given
+        doThrow(new ObjectNotFoundException("artifact", "1250808601744904190")).when(this.wizardService).assignArtifact(2   , "1250808601744904190");
+
+        //When and then
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/wizards/2/artifacts/1250808601744904190").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find artifact with Id 1250808601744904190 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }
