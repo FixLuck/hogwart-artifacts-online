@@ -1,11 +1,9 @@
 package com.fixluck.hogwartartifactsonline.system;
 
-import com.fixluck.hogwartartifactsonline.artifact.Artifact;
 import com.fixluck.hogwartartifactsonline.artifact.ArtifactRepository;
-import com.fixluck.hogwartartifactsonline.artifact.ArtifactService;
-import com.fixluck.hogwartartifactsonline.wizard.Wizard;
+import com.fixluck.hogwartartifactsonline.hogwartuser.HogwartsUser;
+import com.fixluck.hogwartartifactsonline.hogwartuser.UserRepository;
 import com.fixluck.hogwartartifactsonline.wizard.WizardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +13,13 @@ public class DBDataInitializer implements CommandLineRunner {
 
     private final WizardRepository wizardReposiory;
 
+    private final UserRepository userRepository;
 
-    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardReposiory) {
+
+    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardReposiory, UserRepository userRepository) {
         this.artifactRepository = artifactRepository;
         this.wizardReposiory = wizardReposiory;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -93,6 +94,30 @@ public class DBDataInitializer implements CommandLineRunner {
 //        Wizard w4 = new Wizard();
 //        w4.setName("Severus Snape");
 //        wizardReposiory.save(w4);
+//        HogwartsUser u1 = new HogwartsUser();
+//        u1.setId(1);
+//        u1.setUsername("john");
+//        u1.setPassword("123456");
+//        u1.setEnabled(true);
+//        u1.setRoles("admin user");
+//
+//        HogwartsUser u2 = new HogwartsUser();
+//        u2.setId(2);
+//        u2.setUsername("tom");
+//        u2.setPassword("qwerty");
+//        u2.setEnabled(false);
+//        u2.setRoles("user");
+//
+//        HogwartsUser u3 = new HogwartsUser();
+//        u3.setId(3);
+//        u3.setUsername("eric");
+//        u3.setPassword("654321");
+//        u3.setEnabled(true);
+//        u3.setRoles("user");
+//
+//        userRepository.save(u1);
+//        userRepository.save(u2);
+//        userRepository.save(u3);
 
     }
 }
