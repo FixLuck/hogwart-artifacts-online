@@ -3,6 +3,7 @@ package com.fixluck.hogwartartifactsonline.system;
 import com.fixluck.hogwartartifactsonline.artifact.ArtifactRepository;
 import com.fixluck.hogwartartifactsonline.hogwartuser.HogwartsUser;
 import com.fixluck.hogwartartifactsonline.hogwartuser.UserRepository;
+import com.fixluck.hogwartartifactsonline.hogwartuser.UserService;
 import com.fixluck.hogwartartifactsonline.wizard.WizardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,14 @@ public class DBDataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
 
+    private final UserService userService;
 
-    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardReposiory, UserRepository userRepository) {
+
+    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardReposiory, UserRepository userRepository, UserService userService) {
         this.artifactRepository = artifactRepository;
         this.wizardReposiory = wizardReposiory;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -118,6 +122,31 @@ public class DBDataInitializer implements CommandLineRunner {
 //        userRepository.save(u1);
 //        userRepository.save(u2);
 //        userRepository.save(u3);
+
+//        HogwartsUser u4 = new HogwartsUser();
+//        u4.setId(1);
+//        u4.setUsername("max");
+//        u4.setPassword("123456");
+//        u4.setEnabled(true);
+//        u4.setRoles("admin user");
+//
+//        HogwartsUser u5 = new HogwartsUser();
+//        u5.setId(5);
+//        u5.setUsername("harry");
+//        u5.setPassword("abcdef");
+//        u5.setEnabled(true);
+//        u5.setRoles("user");
+//
+//        HogwartsUser u6 = new HogwartsUser();
+//        u6.setId(6);
+//        u6.setUsername("hermione");
+//        u6.setPassword("qwerty");
+//        u6.setEnabled(true);
+//        u6.setRoles("user");
+//
+//        this.userService.save(u4);
+//        this.userService.save(u5);
+//        this.userService.save(u6);
 
     }
 }
