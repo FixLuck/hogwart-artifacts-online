@@ -22,7 +22,7 @@ jobs:
         ports:
           - 1433:1433
         options: >-
-          --health-cmd 'exit 0'  # Simplifies the health check for the purpose of this example
+          --health-cmd 'exit 0'
           --health-interval 10s
           --health-timeout 10s
           --health-retries 3
