@@ -42,4 +42,4 @@ api:
     base-url: /api/v1
 
 server:
-  port: 80
+  port: 8080
