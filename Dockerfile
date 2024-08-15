@@ -12,4 +12,13 @@ COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
 
+FROM mcr.microsoft.com/mssql/server:2019-latest
+ENV SA_PASSWORD=sa123456
+ENV ACCEPT_EULA=Y
+COPY ./userdb.bak /var/opt/mssql/backup/
+
+CMD /opt/mssql/bin/sqlservr & \
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "sa123456" -Q "RESTORE DATABASE UserDB FROM DISK='/var/opt/mssql/backup/userdb.bak' WITH REPLACE"
+
 EXPOSE 8080
+

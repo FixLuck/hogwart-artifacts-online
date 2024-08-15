@@ -2,19 +2,38 @@ spring:
   application:
     name: hogwart-artifacts-online
 
+  # Uncomment the following section to use SQL Server
+  # datasource:
+  #   url: jdbc:sqlserver://localhost:1433;DatabaseName=userdb;encrypt=true;trustServerCertificate=true;
+  #   username: sa
+  #   password: sa123456
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+  #       dialect: org.hibernate.dialect.SQLServer2012Dialect
+
+  # Configuration for H2 database
   datasource:
-    url: jdbc:sqlserver://localhost:1433;DatabaseName=userdb;encrypt=true;trustServerCertificate=true;
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
     username: sa
     password: sa123456
-
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+
   main:
     allow-bean-definition-overriding: true
 
