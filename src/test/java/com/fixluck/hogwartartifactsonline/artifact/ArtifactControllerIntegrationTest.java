@@ -59,16 +59,6 @@ public class ArtifactControllerIntegrationTest {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    void testFindAllArtifactSuccess() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get(this.baseUrl + "/artifacts").accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.flag").value(true))
-                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Find All Success"))
-                .andExpect(jsonPath("$.data").value(Matchers.hasSize(7)));
-    }
-
-    @Test
     @DisplayName("Check add artifact with valid input (POST)")
     void testAddArtifactSuccess() throws Exception {
         Artifact a = new Artifact();
@@ -93,5 +83,15 @@ public class ArtifactControllerIntegrationTest {
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data").value(Matchers.hasSize(7)));
 
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    void testFindAllArtifactSuccess() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get(this.baseUrl + "/artifacts").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.data").value(Matchers.hasSize(7)));
     }
 }
